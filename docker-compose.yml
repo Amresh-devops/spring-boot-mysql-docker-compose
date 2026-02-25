@@ -9,11 +9,9 @@ services:
     networks:
       - docker-mysql
     depends_on:
-      - mysqldb
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 10
+      mysqldb:
+        condition: service_healthy
+
   mysqldb:
     image: mysql:8.0
     container_name: mysqldb-container
@@ -24,7 +22,11 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=test
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   docker-mysql:
-  
-  
