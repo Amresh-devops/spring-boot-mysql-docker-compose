@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   application:
     build: .
@@ -8,8 +9,7 @@ services:
     networks:
       - docker-mysql
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
 
   mysqldb:
     image: mysql:8.0
@@ -21,11 +21,6 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=test
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 networks:
   docker-mysql:
